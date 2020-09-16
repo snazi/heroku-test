@@ -434,6 +434,17 @@ function createUrl(router) {
 
 /***/ }),
 
+/***/ "./node_modules/react-toastify/dist/ReactToastify.css":
+/*!************************************************************!*\
+  !*** ./node_modules/react-toastify/dist/ReactToastify.css ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
 /***/ "./pages/_app.js":
 /*!***********************!*\
   !*** ./pages/_app.js ***!
@@ -453,6 +464,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _components_common_styles_main_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/common/styles/main.scss */ "./components/common/styles/main.scss");
 /* harmony import */ var _components_common_styles_main_scss__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_components_common_styles_main_scss__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-toastify */ "react-toastify");
+/* harmony import */ var react_toastify__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_toastify__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react_toastify_dist_ReactToastify_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-toastify/dist/ReactToastify.css */ "./node_modules/react-toastify/dist/ReactToastify.css");
+/* harmony import */ var react_toastify_dist_ReactToastify_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_toastify_dist_ReactToastify_css__WEBPACK_IMPORTED_MODULE_6__);
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -462,7 +477,10 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
  //styling
 
 
+
+
  // TODO: once finished with entire project, use the current implementation, this is depcrated.
+// const namespace = 'http://localhost:3000'
 
 class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_1___default.a {
   static async getInitialProps({
@@ -481,12 +499,14 @@ class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_1___default.a {
 
     if (user) {
       isAuthenticated = true;
-    } // now that we've managed to give auth details to both client and server side, we should pass the auth data to our pages
+    }
 
+    const isSiteOwner = user && user["http://angeloamadora.herokuapp.com/role"] === 'siteOwner'; // now that we've managed to give auth details to both client and server side, we should pass the auth data to our pages
 
     const auth = {
       user,
-      isAuthenticated
+      isAuthenticated: !!user,
+      isSiteOwner
     }; // return auth as well as page props
 
     return {
@@ -503,7 +523,7 @@ class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_1___default.a {
       auth
     } = this.props; // create an auth prop and pass this current instance of auth.
 
-    return __jsx(next_app__WEBPACK_IMPORTED_MODULE_1__["Container"], null, __jsx(Component, _extends({}, pageProps, {
+    return __jsx(next_app__WEBPACK_IMPORTED_MODULE_1__["Container"], null, __jsx(react_toastify__WEBPACK_IMPORTED_MODULE_5__["ToastContainer"], null), __jsx(Component, _extends({}, pageProps, {
       auth: auth
     })));
   }
@@ -535,15 +555,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const CLIENT_ID = "Tx1EtxPBuv2OriCqZikmha1p0hEFabHZ";
 
 class Auth0 {
   constructor() {
     this.auth0 = new auth0_js__WEBPACK_IMPORTED_MODULE_0___default.a.WebAuth({
       // both domain and client ID come from auth0 application settings on the dashboard
       domain: 'dev-qo3dzhrn.auth0.com',
-      clientID: 'Tx1EtxPBuv2OriCqZikmha1p0hEFabHZ',
+      clientID: CLIENT_ID,
       // redirectUri will replace the URL once you successfully log in
-      redirectUri: 'http://localhost:3000/callback',
+      redirectUri: `${"http://localhost:3000"}/callback`,
       responseType: 'token id_token',
       scope: 'openid profile'
     }); // these 2 function call forces or binds the functions stated below to auth0.js' context. meaning function calls will only be handled in this file.
@@ -584,7 +605,7 @@ class Auth0 {
     js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('expiresAt');
     this.auth0.logout({
       returnTo: '',
-      clientID: 'Tx1EtxPBuv2OriCqZikmha1p0hEFabHZ'
+      clientID: CLIENT_ID
     });
   }
 
@@ -717,6 +738,17 @@ module.exports = require("jsonwebtoken");
 /***/ (function(module, exports) {
 
 module.exports = require("react");
+
+/***/ }),
+
+/***/ "react-toastify":
+/*!*********************************!*\
+  !*** external "react-toastify" ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("react-toastify");
 
 /***/ }),
 
