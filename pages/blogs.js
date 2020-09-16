@@ -106,6 +106,12 @@ export class Blogs extends Component {
                     </Container>
                     </footer>
                 </BasePage>
+                <style jsx>
+                    {`
+                        @import url("https://kit.fontawesome.com/0fee7dd303.js")
+                    `}
+
+                </style>
             </BaseLayout>
 
         )

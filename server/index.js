@@ -1,5 +1,6 @@
 
 const express = require('express')
+const compression = require('compression')
 const path = require('path')
 const next = require('next')
 // routes was taken from the next-routes readme on server.js section
@@ -53,6 +54,7 @@ mongoose.connect(uri, { useNewUrlParser: true })
 app.prepare()
 .then(() => {
   const server = express()
+  server.use(compression())
 
 
   server.use(bodyParser.json())

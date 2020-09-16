@@ -9,10 +9,16 @@
 @import './shared/about';
 @import './shared/cv';
 
+.montserrat-loaded {
+   html, body {
+      font-family: 'Montserrat', 'Helvetica';
+   }
+}
+
 html, body {
    height:100%;
    width:100%;
-   font-family: 'Montserrat';
+   font-family: 'Helvetica';
     
 }
  

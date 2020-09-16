@@ -1,6 +1,7 @@
 import React from 'react'
 import App, {Container} from 'next/app'
 import auth0 from '../services/auth0'
+import Fonts from '../helpers/Fonts'
 
 //styling
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -33,6 +34,10 @@ export default class MyApp extends App {
 
         // return auth as well as page props
         return { pageProps, auth }
+    }
+
+    componentDidMount() {
+        Fonts()
     }
 
     render() {
