@@ -88,10 +88,133 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ({
+
+/***/ "./actions/index.js":
+/*!**************************!*\
+  !*** ./actions/index.js ***!
+  \**************************/
+/*! exports provided: getSecretData, getPortfolios, createPortfolio, getPortfolioById, updatePortfolio, deletePortfolio, getBlogs, getBlogBySlug, getUserBlogs, saveBlog, createBlog, getBlogById, updateBlog, deleteBlog */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSecretData", function() { return getSecretData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPortfolios", function() { return getPortfolios; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPortfolio", function() { return createPortfolio; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPortfolioById", function() { return getPortfolioById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updatePortfolio", function() { return updatePortfolio; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deletePortfolio", function() { return deletePortfolio; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlogs", function() { return getBlogs; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlogBySlug", function() { return getBlogBySlug; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserBlogs", function() { return getUserBlogs; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "saveBlog", function() { return saveBlog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createBlog", function() { return createBlog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlogById", function() { return getBlogById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateBlog", function() { return updateBlog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteBlog", function() { return deleteBlog; });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! js-cookie */ "js-cookie");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _helpers_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helpers/utils */ "./helpers/utils.js");
+
+
+
+const axiosInstance = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
+  baseURL: `${"http://localhost:3000"}/api/v1`,
+  timeout: 3000
+});
+
+const setAuthHeader = req => {
+  const token = req ? Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_2__["getCookieFromRequest"])(req, 'jwt') : js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.getJSON('jwt');
+
+  if (token) {
+    return {
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+  }
+
+  return undefined;
+};
+
+const rejectPromise = resError => {
+  let error = {};
+
+  if (resError && resError.response && resError.response.data) {
+    error = resError.response.data;
+  } else {
+    error = resError;
+  }
+
+  return Promise.reject(error);
+};
+
+const getSecretData = async req => {
+  const url = req ? '/secret' : '/api/v1/secret';
+  return await axiosInstance.get(url, setAuthHeader(req)).then(response => response.data);
+}; // export const getSecretDataServer = async (req) => {
+//     return await axios.get('http://localhost:3000/api/v1/secret', setAuthHeader(req) ).then( response => response.data )
+// }
+
+const getPortfolios = async () => {
+  const url = '/portfolios';
+  return await axiosInstance.get(url).then(response => response.data);
+};
+const createPortfolio = async portfolioData => {
+  const url = '/portfolios';
+  return await axiosInstance.post(url, portfolioData, setAuthHeader()).then(response => response.data).catch(error => {
+    return rejectPromise(error);
+  });
+};
+const getPortfolioById = async id => {
+  return await axiosInstance.get(`/portfolios/${id}`).then(response => response.data);
+};
+const updatePortfolio = async portfolioData => {
+  const url = `/portfolios/${portfolioData._id}`;
+  return await axiosInstance.patch(url, portfolioData, setAuthHeader()).then(response => response.data).catch(error => {
+    return rejectPromise(error);
+  });
+};
+const deletePortfolio = id => {
+  return axiosInstance.delete(`/portfolios/${id}`, setAuthHeader()).then(response => response.data);
+}; // BLOG ACTIONS
+
+const getBlogs = async req => {
+  return await axiosInstance.get('/blogs').then(response => response.data);
+};
+const getBlogBySlug = async slug => {
+  return await axiosInstance.get(`/blogs/s/${slug}`).then(response => response.data);
+};
+const getUserBlogs = async req => {
+  return await axiosInstance.get('/blogs/me', setAuthHeader(req)).then(response => response.data);
+};
+const saveBlog = blogData => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('Promise Resolved!');
+    }, 1000);
+  });
+};
+const createBlog = (blogData, lockId) => {
+  return axiosInstance.post(`/blogs?lockId=${lockId}`, blogData, setAuthHeader()).then(response => response.data).catch(err => rejectPromise(err));
+};
+const getBlogById = async id => {
+  return await axiosInstance.get(`/blogs/${id}`).then(response => response.data);
+};
+const updateBlog = async (blogData, blogId) => {
+  return axiosInstance.patch(`/blogs/${blogId}`, blogData, setAuthHeader()).then(response => response.data).catch(err => rejectPromise(err));
+};
+const deleteBlog = blogId => {
+  return axiosInstance.delete(`/blogs/${blogId}`, setAuthHeader()).then(response => response.data).catch(err => rejectPromise(err));
+};
+
+/***/ }),
 
 /***/ "./components/ActiveLink.js":
 /*!**********************************!*\
@@ -139,6 +262,63 @@ const ActiveLink = (_ref) => {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(next_router__WEBPACK_IMPORTED_MODULE_2__["withRouter"])(ActiveLink));
+
+/***/ }),
+
+/***/ "./components/common/BasePage/BasePage.js":
+/*!************************************************!*\
+  !*** ./components/common/BasePage/BasePage.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! reactstrap */ "reactstrap");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./styles.scss */ "./components/common/BasePage/styles.scss");
+/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_styles_scss__WEBPACK_IMPORTED_MODULE_2__);
+
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+const BasePage = props => {
+  const {
+    className,
+    title,
+    containerClass
+  } = props;
+  return __jsx("div", {
+    className: `base-page ${className}`
+  }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Container"], {
+    className: containerClass
+  }, title && __jsx("div", {
+    className: "page-header"
+  }, " ", __jsx("h1", {
+    className: "page-header-title"
+  }, title), " "), props.children));
+}; // this function allows us to make a default for className
+
+
+BasePage.defaultProps = {
+  className: '',
+  containerClass: ''
+};
+/* harmony default export */ __webpack_exports__["default"] = (BasePage);
+
+/***/ }),
+
+/***/ "./components/common/BasePage/styles.scss":
+/*!************************************************!*\
+  !*** ./components/common/BasePage/styles.scss ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
 
 /***/ }),
 
@@ -404,6 +584,121 @@ const BaseLayout = props => {
 
 /***/ }),
 
+/***/ "./components/portfolios/PortfolioCard.js":
+/*!************************************************!*\
+  !*** ./components/portfolios/PortfolioCard.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return PortfolioCard; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! reactstrap */ "reactstrap");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _PortfolioCardDetail__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PortfolioCardDetail */ "./components/portfolios/PortfolioCardDetail.js");
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+class PortfolioCard extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      isOpen: false
+    };
+    this.modalToggle = this.modalToggle.bind(this);
+  }
+
+  modalToggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
+
+  render() {
+    const {
+      portfolio,
+      children
+    } = this.props;
+    const {
+      isOpen
+    } = this.state;
+    return __jsx("span", {
+      onClick: this.modalToggle
+    }, __jsx(_PortfolioCardDetail__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      toggle: this.modalToggle,
+      portfolio: portfolio,
+      isOpen: isOpen
+    }), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Card"], {
+      className: "portfolio-card"
+    }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["CardHeader"], {
+      className: "portfolio-card-header"
+    }, portfolio.position), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["CardBody"], null, __jsx("p", {
+      className: "portfolio-card-city"
+    }, portfolio.location, " "), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["CardTitle"], {
+      className: "portfolio-card-title"
+    }, portfolio.title), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["CardText"], {
+      className: "portfolio-card-text"
+    }, portfolio.description), __jsx("div", {
+      className: "readMore"
+    }, children))));
+  }
+
+}
+
+/***/ }),
+
+/***/ "./components/portfolios/PortfolioCardDetail.js":
+/*!******************************************************!*\
+  !*** ./components/portfolios/PortfolioCardDetail.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! reactstrap */ "reactstrap");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+
+const PortfolioCardDetail = props => {
+  const {
+    buttonLabel,
+    className,
+    isOpen,
+    toggle,
+    portfolio
+  } = props;
+  const {
+    0: modal,
+    1: setModal
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
+  return __jsx("div", null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"], {
+    isOpen: isOpen,
+    toggle: toggle,
+    className: className
+  }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ModalHeader"], {
+    toggle: toggle
+  }, portfolio.title), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ModalBody"], null, __jsx("p", null, __jsx("b", null, "Description: "), portfolio.description), __jsx("p", null, __jsx("b", null, "Company: "), portfolio.company), __jsx("p", null, __jsx("b", null, "Position: "), portfolio.position), __jsx("p", null, __jsx("b", null, "Location: "), portfolio.location), __jsx("p", null, __jsx("b", null, "Start Date: "), moment__WEBPACK_IMPORTED_MODULE_2___default()(portfolio.startDate).format('MMMM YYYY')), __jsx("p", null, __jsx("b", null, "End Date: "), portfolio.endDate ? moment__WEBPACK_IMPORTED_MODULE_2___default()(portfolio.endDate).format('MMMM YYYY') : 'Still working here')), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["ModalFooter"], null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    color: "secondary",
+    onClick: toggle
+  }, "Cancel"))));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (PortfolioCardDetail);
+
+/***/ }),
+
 /***/ "./helpers/utils.js":
 /*!**************************!*\
   !*** ./helpers/utils.js ***!
@@ -597,17 +892,6 @@ function _typeof(obj) {
 }
 
 module.exports = _typeof;
-
-/***/ }),
-
-/***/ "./node_modules/bootstrap/dist/css/bootstrap.min.css":
-/*!***********************************************************!*\
-  !*** ./node_modules/bootstrap/dist/css/bootstrap.min.css ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
 
 /***/ }),
 
@@ -2139,26 +2423,29 @@ module.exports = __webpack_require__(/*! ./dist/client/link */ "./node_modules/n
 
 /***/ }),
 
-/***/ "./pages/index.jsx":
-/*!*************************!*\
-  !*** ./pages/index.jsx ***!
-  \*************************/
-/*! exports provided: Index, default */
+/***/ "./pages/portfolios.js":
+/*!*****************************!*\
+  !*** ./pages/portfolios.js ***!
+  \*****************************/
+/*! exports provided: Portfolios, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Index", function() { return Index; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Portfolios", function() { return Portfolios; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_common_Header_Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/common/Header/Header */ "./components/common/Header/Header.jsx");
 /* harmony import */ var _components_layouts_BaseLayout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/layouts/BaseLayout */ "./components/layouts/BaseLayout.js");
-/* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap.min.css */ "./node_modules/bootstrap/dist/css/bootstrap.min.css");
-/* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "reactstrap");
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var react_typed__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-typed */ "react-typed");
-/* harmony import */ var react_typed__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_typed__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../routes */ "./routes.js");
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_routes__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _components_common_BasePage_BasePage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/common/BasePage/BasePage */ "./components/common/BasePage/BasePage.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! reactstrap */ "reactstrap");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _components_portfolios_PortfolioCard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/portfolios/PortfolioCard */ "./components/portfolios/PortfolioCard.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../actions */ "./actions/index.js");
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -2166,113 +2453,101 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
+ // this link comes from routes.js
+
+
+ // reacttrap imports for the card
 
 
 
-class Index extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  // constructor will be called first
-  constructor(props) {
-    super(props);
-    this.state = {
-      isFlipping: false
-    }; // array to be displayed in the typed animation
 
-    this.roles = ['Developer', 'Project Manager', 'Tech Enthusiast', 'Team Player', 'React JS', 'React Native'];
+
+class Portfolios extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  static async getInitialProps() {
+    let portfolios = [];
+
+    try {
+      portfolios = await Object(_actions__WEBPACK_IMPORTED_MODULE_8__["getPortfolios"])();
+    } catch (err) {
+      console.log(err);
+    }
+
+    return {
+      portfolios
+    };
   }
 
-  componentDidMount() {
-    this.animateCard();
+  navigateToEdit(portfolioId, e) {
+    e.stopPropagation();
+    _routes__WEBPACK_IMPORTED_MODULE_4__["Router"].pushRoute(`/portfolios/${portfolioId}/edit`);
   }
 
-  componentWillUnmount() {
-    this.cardAnimationInterval && clearInterval(this.cardAnimationInterval);
+  displayDeleteWarning(portfolioId, e) {
+    e.stopPropagation();
+    const isConfirmed = confirm('Are you sure you want to delete?');
+
+    if (isConfirmed) {
+      this.deletePortfolio(portfolioId);
+    }
   }
 
-  animateCard() {
-    this.cardAnimationInterval = setInterval(() => {
-      this.setState({
-        isFlipping: !this.state.isFlipping
-      });
-    }, 30000);
-  } // then 2nd to be called is render()
+  deletePortfolio(portfolioId) {
+    Object(_actions__WEBPACK_IMPORTED_MODULE_8__["deletePortfolio"])(portfolioId).then(() => {
+      _routes__WEBPACK_IMPORTED_MODULE_4__["Router"].pushRoute('/portfolios');
+    }).catch(err => {
+      console.error(err);
+    });
+  }
 
-
-  render() {
-    // passed this in _app.js. Destructurize it
+  renderPortfolios(portfolios) {
     const {
       isAuthenticated,
-      user
+      isSiteOwner
     } = this.props.auth;
+    return portfolios.map((portfolio, index) => {
+      return __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Col"], {
+        key: index,
+        md: "4"
+      }, __jsx(_components_portfolios_PortfolioCard__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        portfolio: portfolio
+      }, isAuthenticated && isSiteOwner && __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Button"], {
+        onClick: e => {
+          e.stopPropagation();
+          this.navigateToEdit(portfolio._id, e);
+        },
+        color: "warning"
+      }, "Edit"), ' ', __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Button"], {
+        onClick: e => {
+          e.stopPropagation();
+          this.displayDeleteWarning(portfolio._id, e);
+        },
+        color: "danger"
+      }, "Delete"))));
+    });
+  }
+
+  render() {
     const {
-      isFlipping
-    } = this.state;
-    return __jsx(_components_layouts_BaseLayout__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({
-      className: `cover ${isFlipping ? 'cover-1' : 'cover-0'}`
-    }, this.props.auth, {
-      headerType: "index",
-      title: "Angelo Amadora - Portfolio"
-    }), __jsx("div", {
-      className: "main-section"
-    }, __jsx("div", {
-      className: "background-image"
-    }, __jsx("img", {
-      className: "img-styling",
-      src: ""
-    })), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Row"], null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Col"], {
-      md: "6"
-    }, __jsx("div", {
-      className: "hero-section"
-    }, __jsx("div", {
-      className: `flipper ${isFlipping ? 'isFlipping' : ''}`
-    }, __jsx("div", {
-      className: "front"
-    }, __jsx("div", {
-      className: "hero-section-content"
-    }, __jsx("h2", null, " Full Stack Web Developer "), __jsx("div", {
-      className: "hero-section-content-intro"
-    }, "Have a look at my portfolio and job history.")), __jsx("img", {
-      className: "image",
-      src: "/images/section-1.png"
-    }), __jsx("div", {
-      className: "shadow-custom"
-    }, __jsx("div", {
-      className: "shadow-inner"
-    }, " "))), __jsx("div", {
-      className: "back"
-    }, __jsx("div", {
-      className: "hero-section-content"
-    }, __jsx("h2", null, " Get Your Projects done with me. "), __jsx("div", {
-      className: "hero-section-content-intro"
-    }, "Professional Quality outputs.")), __jsx("img", {
-      className: "image",
-      src: "/images/section-2.png"
-    }), __jsx("div", {
-      className: "shadow-custom shadow-custom-2"
-    }, __jsx("div", {
-      className: "shadow-inner"
-    }, " ")))))), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Col"], {
-      md: "6",
-      className: "hero-welcome-wrapper"
-    }, __jsx("div", {
-      className: "hero-welcome-text"
-    }, __jsx("h1", null, isAuthenticated && __jsx("span", null, " ", __jsx("b", null, user.name), " "), "Welcome to the portfolio website of Angelo Amadora. Get informed, collaborate and discover projects I was working on through the years!")), __jsx("div", null, __jsx(react_typed__WEBPACK_IMPORTED_MODULE_5___default.a, {
-      loop: true,
-      typeSpeed: 60,
-      backSpeed: 30,
-      strings: this.roles,
-      smartBackspace: true,
-      shuffle: false,
-      backDelay: 1000,
-      showCursor: true,
-      cursorChar: "|",
-      className: "self-typed"
-    })), __jsx("div", {
-      className: "hero-welcome-bio"
-    }, __jsx("h1", null, "Let's take a look on my work.")))))));
+      portfolios
+    } = this.props;
+    const {
+      isAuthenticated,
+      isSiteOwner
+    } = this.props.auth;
+    return __jsx("div", null, __jsx(_components_layouts_BaseLayout__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({
+      title: "Angelo Amadora - Learn about my Career"
+    }, this.props.auth), __jsx(_components_common_BasePage_BasePage__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      className: "portfolio-page",
+      title: "Portfolios"
+    }, isAuthenticated && isSiteOwner && __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Button"], {
+      onClick: () => _routes__WEBPACK_IMPORTED_MODULE_4__["Router"].pushRoute('/portfolios/new'),
+      color: "success",
+      className: "create-port-btn"
+    }, "Create Portfolio"), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Row"], null, this.renderPortfolios(portfolios)))));
   }
 
 }
-/* harmony default export */ __webpack_exports__["default"] = (Index);
+/* harmony default export */ __webpack_exports__["default"] = (Portfolios);
 
 /***/ }),
 
@@ -2435,14 +2710,14 @@ const auth0Client = new Auth0();
 
 /***/ }),
 
-/***/ 3:
-/*!*******************************!*\
-  !*** multi ./pages/index.jsx ***!
-  \*******************************/
+/***/ 4:
+/*!***********************************!*\
+  !*** multi ./pages/portfolios.js ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\Documents\Projects\heroku potfolio test\heroku-test\pages\index.jsx */"./pages/index.jsx");
+module.exports = __webpack_require__(/*! E:\Documents\Projects\heroku potfolio test\heroku-test\pages\portfolios.js */"./pages/portfolios.js");
 
 
 /***/ }),
@@ -2546,6 +2821,17 @@ module.exports = require("jsonwebtoken");
 
 /***/ }),
 
+/***/ "moment":
+/*!*************************!*\
+  !*** external "moment" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("moment");
+
+/***/ }),
+
 /***/ "next-routes":
 /*!******************************!*\
   !*** external "next-routes" ***!
@@ -2623,17 +2909,6 @@ module.exports = require("react-is");
 
 /***/ }),
 
-/***/ "react-typed":
-/*!******************************!*\
-  !*** external "react-typed" ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("react-typed");
-
-/***/ }),
-
 /***/ "reactstrap":
 /*!*****************************!*\
   !*** external "reactstrap" ***!
@@ -2657,4 +2932,4 @@ module.exports = require("url");
 /***/ })
 
 /******/ });
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=portfolios.js.map

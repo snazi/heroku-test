@@ -1,6 +1,9 @@
 var jwt = require('express-jwt')
 // this call is the jwksClient, I just think its easier to call it RSA since that what I need it to do.
 const jwksRSA = require('jwks-rsa');
+const config  = require('../config')
+
+const NAMESPACE = config.NAMESPACE
 
 // const namespace = 'http://localhost:3000/'
 
@@ -26,7 +29,7 @@ exports.checkJWT = jwt({
   exports.checkRole = (role) => (req, res, next) => {
       const user = req.user
 
-      if( user && (user[process.env.NAMESPACE +'/role'] === role) ){
+      if( user && user[NAMESPACE +'/role'] && (user[NAMESPACE +'/role'] === role) ){
         next()
       } else {
         return res.status(401).send({ title: 'not authorized', desc: 'you are not authorized to access this data'})

@@ -88,10 +88,133 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
+
+/***/ "./actions/index.js":
+/*!**************************!*\
+  !*** ./actions/index.js ***!
+  \**************************/
+/*! exports provided: getSecretData, getPortfolios, createPortfolio, getPortfolioById, updatePortfolio, deletePortfolio, getBlogs, getBlogBySlug, getUserBlogs, saveBlog, createBlog, getBlogById, updateBlog, deleteBlog */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSecretData", function() { return getSecretData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPortfolios", function() { return getPortfolios; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPortfolio", function() { return createPortfolio; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPortfolioById", function() { return getPortfolioById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updatePortfolio", function() { return updatePortfolio; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deletePortfolio", function() { return deletePortfolio; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlogs", function() { return getBlogs; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlogBySlug", function() { return getBlogBySlug; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserBlogs", function() { return getUserBlogs; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "saveBlog", function() { return saveBlog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createBlog", function() { return createBlog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlogById", function() { return getBlogById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateBlog", function() { return updateBlog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteBlog", function() { return deleteBlog; });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! js-cookie */ "js-cookie");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _helpers_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helpers/utils */ "./helpers/utils.js");
+
+
+
+const axiosInstance = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
+  baseURL: `${"http://localhost:3000"}/api/v1`,
+  timeout: 3000
+});
+
+const setAuthHeader = req => {
+  const token = req ? Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_2__["getCookieFromRequest"])(req, 'jwt') : js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.getJSON('jwt');
+
+  if (token) {
+    return {
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    };
+  }
+
+  return undefined;
+};
+
+const rejectPromise = resError => {
+  let error = {};
+
+  if (resError && resError.response && resError.response.data) {
+    error = resError.response.data;
+  } else {
+    error = resError;
+  }
+
+  return Promise.reject(error);
+};
+
+const getSecretData = async req => {
+  const url = req ? '/secret' : '/api/v1/secret';
+  return await axiosInstance.get(url, setAuthHeader(req)).then(response => response.data);
+}; // export const getSecretDataServer = async (req) => {
+//     return await axios.get('http://localhost:3000/api/v1/secret', setAuthHeader(req) ).then( response => response.data )
+// }
+
+const getPortfolios = async () => {
+  const url = '/portfolios';
+  return await axiosInstance.get(url).then(response => response.data);
+};
+const createPortfolio = async portfolioData => {
+  const url = '/portfolios';
+  return await axiosInstance.post(url, portfolioData, setAuthHeader()).then(response => response.data).catch(error => {
+    return rejectPromise(error);
+  });
+};
+const getPortfolioById = async id => {
+  return await axiosInstance.get(`/portfolios/${id}`).then(response => response.data);
+};
+const updatePortfolio = async portfolioData => {
+  const url = `/portfolios/${portfolioData._id}`;
+  return await axiosInstance.patch(url, portfolioData, setAuthHeader()).then(response => response.data).catch(error => {
+    return rejectPromise(error);
+  });
+};
+const deletePortfolio = id => {
+  return axiosInstance.delete(`/portfolios/${id}`, setAuthHeader()).then(response => response.data);
+}; // BLOG ACTIONS
+
+const getBlogs = async req => {
+  return await axiosInstance.get('/blogs').then(response => response.data);
+};
+const getBlogBySlug = async slug => {
+  return await axiosInstance.get(`/blogs/s/${slug}`).then(response => response.data);
+};
+const getUserBlogs = async req => {
+  return await axiosInstance.get('/blogs/me', setAuthHeader(req)).then(response => response.data);
+};
+const saveBlog = blogData => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('Promise Resolved!');
+    }, 1000);
+  });
+};
+const createBlog = (blogData, lockId) => {
+  return axiosInstance.post(`/blogs?lockId=${lockId}`, blogData, setAuthHeader()).then(response => response.data).catch(err => rejectPromise(err));
+};
+const getBlogById = async id => {
+  return await axiosInstance.get(`/blogs/${id}`).then(response => response.data);
+};
+const updateBlog = async (blogData, blogId) => {
+  return axiosInstance.patch(`/blogs/${blogId}`, blogData, setAuthHeader()).then(response => response.data).catch(err => rejectPromise(err));
+};
+const deleteBlog = blogId => {
+  return axiosInstance.delete(`/blogs/${blogId}`, setAuthHeader()).then(response => response.data).catch(err => rejectPromise(err));
+};
+
+/***/ }),
 
 /***/ "./components/ActiveLink.js":
 /*!**********************************!*\
@@ -139,6 +262,63 @@ const ActiveLink = (_ref) => {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(next_router__WEBPACK_IMPORTED_MODULE_2__["withRouter"])(ActiveLink));
+
+/***/ }),
+
+/***/ "./components/common/BasePage/BasePage.js":
+/*!************************************************!*\
+  !*** ./components/common/BasePage/BasePage.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! reactstrap */ "reactstrap");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./styles.scss */ "./components/common/BasePage/styles.scss");
+/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_styles_scss__WEBPACK_IMPORTED_MODULE_2__);
+
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+const BasePage = props => {
+  const {
+    className,
+    title,
+    containerClass
+  } = props;
+  return __jsx("div", {
+    className: `base-page ${className}`
+  }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Container"], {
+    className: containerClass
+  }, title && __jsx("div", {
+    className: "page-header"
+  }, " ", __jsx("h1", {
+    className: "page-header-title"
+  }, title), " "), props.children));
+}; // this function allows us to make a default for className
+
+
+BasePage.defaultProps = {
+  className: '',
+  containerClass: ''
+};
+/* harmony default export */ __webpack_exports__["default"] = (BasePage);
+
+/***/ }),
+
+/***/ "./components/common/BasePage/styles.scss":
+/*!************************************************!*\
+  !*** ./components/common/BasePage/styles.scss ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
 
 /***/ }),
 
@@ -322,6 +502,248 @@ const Header = props => {
 
 /***/ }),
 
+/***/ "./components/form/PortDate.js":
+/*!*************************************!*\
+  !*** ./components/form/PortDate.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-datepicker */ "react-datepicker");
+/* harmony import */ var react_datepicker__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_datepicker__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_datepicker_dist_react_datepicker_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-datepicker/dist/react-datepicker.css */ "./node_modules/react-datepicker/dist/react-datepicker.css");
+/* harmony import */ var react_datepicker_dist_react_datepicker_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_datepicker_dist_react_datepicker_css__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "reactstrap");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_4__);
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+ // CSS Modules, react-datepicker-cssmodules.css
+// import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+
+
+
+class PortDate extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+
+    _defineProperty(this, "handleChange", date => {
+      const {
+        setFieldValue,
+        setFieldTouched
+      } = this.props.form;
+      const {
+        name
+      } = this.props.field;
+      this.setState({
+        dateValue: date
+      });
+      setFieldValue(name, date, true);
+      setFieldTouched(name, true, true);
+    });
+
+    const dateValue = props.initialDate ? new Date(props.initialDate) : new Date();
+    const isHidden = props.initialDate ? false : true;
+    this.state = {
+      dateValue,
+      isHidden
+    };
+  }
+
+  toggleDate(date) {
+    const {
+      setFieldValue,
+      setFieldTouched
+    } = this.props.form;
+    const {
+      name
+    } = this.props.field;
+    this.setState({
+      isHidden: !this.state.isHidden
+    });
+    setFieldValue(name, date, true);
+    setFieldTouched(name, true, true);
+  }
+
+  render() {
+    const {
+      isHidden,
+      dateValue
+    } = this.state;
+    const {
+      label,
+      field,
+      canBeDisabled,
+      form: {
+        touched,
+        errors
+      }
+    } = this.props;
+    return __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["FormGroup"], null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Label"], null, label), __jsx("div", {
+      className: "input-group"
+    }, !isHidden && __jsx(react_datepicker__WEBPACK_IMPORTED_MODULE_1___default.a, {
+      selected: dateValue,
+      onChange: this.handleChange,
+      peekNextMonth: true,
+      showMonthDropdown: true,
+      showYearDropdown: true,
+      maxDate: new Date(),
+      dropdownMode: "select"
+    })), canBeDisabled && !isHidden && __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
+      onClick: () => this.toggleDate()
+    }, "Still Working here"), canBeDisabled && isHidden && __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx("span", null, "Still Working Here..."), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
+      onClick: () => this.toggleDate(dateValue)
+    }, " Set End Date")), touched[field.name] && errors[field.name] && __jsx("div", {
+      className: "error"
+    }, errors[field.name]));
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (PortDate);
+
+/***/ }),
+
+/***/ "./components/form/PortInput.js":
+/*!**************************************!*\
+  !*** ./components/form/PortInput.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! reactstrap */ "reactstrap");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.scss */ "./components/form/style.scss");
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_style_scss__WEBPACK_IMPORTED_MODULE_2__);
+
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
+
+
+const PortInput = (_ref) => {
+  let {
+    label,
+    type,
+    field,
+    // { name, value, onChange, onBlur }
+    form: {
+      touched,
+      errors
+    }
+  } = _ref,
+      props = _objectWithoutProperties(_ref, ["label", "type", "field", "form"]);
+
+  return __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["FormGroup"], null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Label"], null, label), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_1__["Input"], _extends({
+    type: type
+  }, field, props)), touched[field.name] && errors[field.name] && __jsx("div", {
+    className: "error"
+  }, errors[field.name]));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (PortInput);
+
+/***/ }),
+
+/***/ "./components/form/style.scss":
+/*!************************************!*\
+  !*** ./components/form/style.scss ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./components/hoc/withAuth.js":
+/*!************************************!*\
+  !*** ./components/hoc/withAuth.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _layouts_BaseLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../layouts/BaseLayout */ "./components/layouts/BaseLayout.js");
+/* harmony import */ var _common_BasePage_BasePage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../common/BasePage/BasePage */ "./components/common/BasePage/BasePage.js");
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+ // const namespace = 'http://localhost:3000/'
+
+/* harmony default export */ __webpack_exports__["default"] = (role => {
+  return Component => {
+    return class withAuth extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+      static async getInitialProps(args) {
+        // this "waits" a check of the componentbeing passed down if it has getInitialProps and execute it
+        const pageProps = (await Component.getInitialProps) && (await Component.getInitialProps(args)); // destructurize the pageprops as a "prop" if we did not destructurize it we'd be passing a pageProps outside of a
+
+        return _objectSpread({}, pageProps);
+      }
+
+      renderProtectedPage() {
+        const {
+          isAuthenticated,
+          user
+        } = this.props.auth;
+        const userRole = user && user[`${"http://angeloamadora.herokuapp.com"}/role`];
+        let isAuthorized = false;
+
+        if (role) {
+          if (userRole && userRole === role) isAuthorized = true;
+        } else {
+          isAuthorized = true;
+        }
+
+        if (!isAuthenticated) {
+          return __jsx("div", null, __jsx(_layouts_BaseLayout__WEBPACK_IMPORTED_MODULE_1__["default"], this.props.auth, __jsx(_common_BasePage_BasePage__WEBPACK_IMPORTED_MODULE_2__["default"], null, __jsx("h1", null, "You're not isAuthenticated, please log in to access this page"))));
+        } else if (!isAuthorized) {
+          return __jsx("div", null, __jsx(_layouts_BaseLayout__WEBPACK_IMPORTED_MODULE_1__["default"], this.props.auth, __jsx(_common_BasePage_BasePage__WEBPACK_IMPORTED_MODULE_2__["default"], null, __jsx("h1", null, "You're not Authroized, you dont have permission to access this page"))));
+        } else {
+          return __jsx(Component, this.props);
+        }
+      }
+
+      render() {
+        return this.renderProtectedPage();
+      }
+
+    };
+  };
+});
+
+/***/ }),
+
 /***/ "./components/layouts/BaseLayout.js":
 /*!******************************************!*\
   !*** ./components/layouts/BaseLayout.js ***!
@@ -401,6 +823,161 @@ const BaseLayout = props => {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (BaseLayout);
+
+/***/ }),
+
+/***/ "./components/portfolios/PortfolioCreateFrom.js":
+/*!******************************************************!*\
+  !*** ./components/portfolios/PortfolioCreateFrom.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! formik */ "formik");
+/* harmony import */ var formik__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(formik__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! reactstrap */ "reactstrap");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _form_PortInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../form/PortInput */ "./components/form/PortInput.js");
+/* harmony import */ var _form_PortDate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../form/PortDate */ "./components/form/PortDate.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_5__);
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+// Render Prop
+
+
+
+
+
+
+
+const validateInputs = values => {
+  const errors = {};
+  const keyArray = Object.keys(values);
+  keyArray.forEach(key => {
+    if (!values[key]) {
+      if (key !== 'endDate') {
+        errors[key] = `Field ${key} is required!`;
+      }
+    }
+  });
+  const startDate = moment__WEBPACK_IMPORTED_MODULE_5___default()(values.startDate);
+  const endDate = moment__WEBPACK_IMPORTED_MODULE_5___default()(values.endDate);
+
+  if (startDate && endDate && moment__WEBPACK_IMPORTED_MODULE_5___default()(endDate).isBefore(startDate)) {
+    errors.endDate = 'End Date cannot be before start Date';
+  }
+
+  return errors;
+};
+
+const PortfolioCreateFrom = ({
+  initialValues,
+  onSubmit,
+  error
+}) => __jsx("div", null, __jsx(formik__WEBPACK_IMPORTED_MODULE_1__["Formik"], {
+  initialValues: initialValues,
+  validate: validateInputs,
+  onSubmit: onSubmit
+}, ({
+  isSubmitting
+}) => __jsx(formik__WEBPACK_IMPORTED_MODULE_1__["Form"], null, __jsx(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+  type: "text",
+  name: "title",
+  label: "Title",
+  component: _form_PortInput__WEBPACK_IMPORTED_MODULE_3__["default"]
+}), __jsx(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+  type: "text",
+  name: "company",
+  label: "Company",
+  component: _form_PortInput__WEBPACK_IMPORTED_MODULE_3__["default"]
+}), __jsx(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+  type: "text",
+  name: "location",
+  label: "Location",
+  component: _form_PortInput__WEBPACK_IMPORTED_MODULE_3__["default"]
+}), __jsx(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+  type: "text",
+  name: "position",
+  label: "Position",
+  component: _form_PortInput__WEBPACK_IMPORTED_MODULE_3__["default"]
+}), __jsx(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+  type: "textarea",
+  name: "description",
+  label: "Description",
+  component: _form_PortInput__WEBPACK_IMPORTED_MODULE_3__["default"]
+}), __jsx(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+  name: "startDate",
+  initialDate: initialValues.startDate,
+  label: "Start Date",
+  component: _form_PortDate__WEBPACK_IMPORTED_MODULE_4__["default"]
+}), __jsx(formik__WEBPACK_IMPORTED_MODULE_1__["Field"], {
+  name: "endDate",
+  initialDate: initialValues.endDate,
+  canBeDisabled: true,
+  label: "End Date",
+  component: _form_PortDate__WEBPACK_IMPORTED_MODULE_4__["default"]
+}), error && __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_2__["Alert"], {
+  color: "danger"
+}, error), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_2__["Button"], {
+  color: "success",
+  size: "lg",
+  type: "submit",
+  disabled: isSubmitting
+}, "Create Entry"))));
+
+/* harmony default export */ __webpack_exports__["default"] = (PortfolioCreateFrom); // import React from 'react'
+// class PortfolioCreateFrom extends React.Component {
+//     constructor(props) {
+//         super(props)
+//         this.state = {
+//             title: '',
+//             desc: '',
+//             language:''
+//         }
+//         this.handleChange = this.handleChange.bind(this)
+//         this.handleSubmit = this.handleSubmit.bind(this)
+//     }
+//     handleChange(e) {
+//         const field = e.target.name
+//         this.setState({
+//             [field]: e.target.value
+//         })
+//     }
+//     handleSubmit(e) {
+//         alert(`You submitted the following ${this.state.title} ${this.state.desc} ${this.state.language}`)
+//         e.preventDefault()
+//     }
+//     render() {
+//         return(
+//             <form onSubmit={this.handleSubmit}>
+//                 <Label>
+//                     Name:
+//                     <input name="title" type="text" value={this.state.title} onChange={this.handleChange} />
+//                 </Label>
+//                 <Label>
+//                     Description
+//                     <textarea name="desc" type="text" value={this.state.desc} onChange={this.handleChange} />
+//                 </Label>
+//                 <Label>
+//                     Pick your favorite programming language:
+//                     <select name="language" value={this.state.language} onChange={this.handleChange}>
+//                         <option value="javascript">Javascript</option>
+//                         <option value="java">Java</option>
+//                         <option value="swift">Swift</option>
+//                         <option value="sql">MySQL</option>
+//                         <option value="c++">C++</option>
+//                     </select>
+//                 </Label>
+//                 <input type="submit" value="Submit"/>
+//             </form>
+//         )
+//     }
+// }
+// export default PortfolioCreateFrom
 
 /***/ }),
 
@@ -597,17 +1174,6 @@ function _typeof(obj) {
 }
 
 module.exports = _typeof;
-
-/***/ }),
-
-/***/ "./node_modules/bootstrap/dist/css/bootstrap.min.css":
-/*!***********************************************************!*\
-  !*** ./node_modules/bootstrap/dist/css/bootstrap.min.css ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-
 
 /***/ }),
 
@@ -2139,29 +2705,43 @@ module.exports = __webpack_require__(/*! ./dist/client/link */ "./node_modules/n
 
 /***/ }),
 
-/***/ "./pages/index.jsx":
-/*!*************************!*\
-  !*** ./pages/index.jsx ***!
-  \*************************/
-/*! exports provided: Index, default */
+/***/ "./node_modules/react-datepicker/dist/react-datepicker.css":
+/*!*****************************************************************!*\
+  !*** ./node_modules/react-datepicker/dist/react-datepicker.css ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./pages/portfolioNew.js":
+/*!*******************************!*\
+  !*** ./pages/portfolioNew.js ***!
+  \*******************************/
+/*! exports provided: portfolioNew, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Index", function() { return Index; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "portfolioNew", function() { return portfolioNew; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_common_Header_Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/common/Header/Header */ "./components/common/Header/Header.jsx");
 /* harmony import */ var _components_layouts_BaseLayout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/layouts/BaseLayout */ "./components/layouts/BaseLayout.js");
-/* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap.min.css */ "./node_modules/bootstrap/dist/css/bootstrap.min.css");
-/* harmony import */ var bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_min_css__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! reactstrap */ "reactstrap");
-/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var react_typed__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-typed */ "react-typed");
-/* harmony import */ var react_typed__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_typed__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _components_common_BasePage_BasePage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/common/BasePage/BasePage */ "./components/common/BasePage/BasePage.js");
+/* harmony import */ var _components_hoc_withAuth__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/hoc/withAuth */ "./components/hoc/withAuth.js");
+/* harmony import */ var _components_portfolios_PortfolioCreateFrom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/portfolios/PortfolioCreateFrom */ "./components/portfolios/PortfolioCreateFrom.js");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! reactstrap */ "reactstrap");
+/* harmony import */ var reactstrap__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(reactstrap__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../actions */ "./actions/index.js");
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../routes */ "./routes.js");
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_routes__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_9__);
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 
 
@@ -2169,110 +2749,65 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
-class Index extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  // constructor will be called first
+
+
+const INITIAL_VALUES = {
+  title: '',
+  company: '',
+  location: '',
+  position: '',
+  description: '',
+  startDate: moment__WEBPACK_IMPORTED_MODULE_9___default()(),
+  endDate: moment__WEBPACK_IMPORTED_MODULE_9___default()()
+};
+class portfolioNew extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
-    super(props);
+    super();
     this.state = {
-      isFlipping: false
-    }; // array to be displayed in the typed animation
-
-    this.roles = ['Developer', 'Project Manager', 'Tech Enthusiast', 'Team Player', 'React JS', 'React Native'];
+      error: undefined
+    };
+    this.savePortfolio = this.savePortfolio.bind(this);
   }
 
-  componentDidMount() {
-    this.animateCard();
-  }
-
-  componentWillUnmount() {
-    this.cardAnimationInterval && clearInterval(this.cardAnimationInterval);
-  }
-
-  animateCard() {
-    this.cardAnimationInterval = setInterval(() => {
+  savePortfolio(portfolioData, {
+    setSubmitting
+  }) {
+    // alert(JSON.stringify(portfolioData, null, 2));
+    setSubmitting(true);
+    Object(_actions__WEBPACK_IMPORTED_MODULE_7__["createPortfolio"])(portfolioData).then(portfolio => {
+      setSubmitting(false);
+      console.log(portfolio);
       this.setState({
-        isFlipping: !this.state.isFlipping
+        error: undefined
       });
-    }, 30000);
-  } // then 2nd to be called is render()
-
+      _routes__WEBPACK_IMPORTED_MODULE_8__["Router"].pushRoute('/portfolios');
+    }).catch(err => {
+      const error = err.message || "Server Error!";
+      setSubmitting(false);
+      this.setState({
+        error: err.message
+      });
+    });
+  }
 
   render() {
-    // passed this in _app.js. Destructurize it
     const {
-      isAuthenticated,
-      user
-    } = this.props.auth;
-    const {
-      isFlipping
+      error
     } = this.state;
-    return __jsx(_components_layouts_BaseLayout__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({
-      className: `cover ${isFlipping ? 'cover-1' : 'cover-0'}`
-    }, this.props.auth, {
-      headerType: "index",
-      title: "Angelo Amadora - Portfolio"
-    }), __jsx("div", {
-      className: "main-section"
-    }, __jsx("div", {
-      className: "background-image"
-    }, __jsx("img", {
-      className: "img-styling",
-      src: ""
-    })), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Row"], null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Col"], {
+    return __jsx("div", null, __jsx(_components_layouts_BaseLayout__WEBPACK_IMPORTED_MODULE_2__["default"], this.props.auth, __jsx(_components_common_BasePage_BasePage__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      className: "portfolio-create-page",
+      title: "Create New Portfolio"
+    }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Row"], null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_6__["Col"], {
       md: "6"
-    }, __jsx("div", {
-      className: "hero-section"
-    }, __jsx("div", {
-      className: `flipper ${isFlipping ? 'isFlipping' : ''}`
-    }, __jsx("div", {
-      className: "front"
-    }, __jsx("div", {
-      className: "hero-section-content"
-    }, __jsx("h2", null, " Full Stack Web Developer "), __jsx("div", {
-      className: "hero-section-content-intro"
-    }, "Have a look at my portfolio and job history.")), __jsx("img", {
-      className: "image",
-      src: "/images/section-1.png"
-    }), __jsx("div", {
-      className: "shadow-custom"
-    }, __jsx("div", {
-      className: "shadow-inner"
-    }, " "))), __jsx("div", {
-      className: "back"
-    }, __jsx("div", {
-      className: "hero-section-content"
-    }, __jsx("h2", null, " Get Your Projects done with me. "), __jsx("div", {
-      className: "hero-section-content-intro"
-    }, "Professional Quality outputs.")), __jsx("img", {
-      className: "image",
-      src: "/images/section-2.png"
-    }), __jsx("div", {
-      className: "shadow-custom shadow-custom-2"
-    }, __jsx("div", {
-      className: "shadow-inner"
-    }, " ")))))), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_4__["Col"], {
-      md: "6",
-      className: "hero-welcome-wrapper"
-    }, __jsx("div", {
-      className: "hero-welcome-text"
-    }, __jsx("h1", null, isAuthenticated && __jsx("span", null, " ", __jsx("b", null, user.name), " "), "Welcome to the portfolio website of Angelo Amadora. Get informed, collaborate and discover projects I was working on through the years!")), __jsx("div", null, __jsx(react_typed__WEBPACK_IMPORTED_MODULE_5___default.a, {
-      loop: true,
-      typeSpeed: 60,
-      backSpeed: 30,
-      strings: this.roles,
-      smartBackspace: true,
-      shuffle: false,
-      backDelay: 1000,
-      showCursor: true,
-      cursorChar: "|",
-      className: "self-typed"
-    })), __jsx("div", {
-      className: "hero-welcome-bio"
-    }, __jsx("h1", null, "Let's take a look on my work.")))))));
+    }, __jsx(_components_portfolios_PortfolioCreateFrom__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      initialValues: INITIAL_VALUES,
+      error: error,
+      onSubmit: this.savePortfolio
+    }))))));
   }
 
 }
-/* harmony default export */ __webpack_exports__["default"] = (Index);
+/* harmony default export */ __webpack_exports__["default"] = (Object(_components_hoc_withAuth__WEBPACK_IMPORTED_MODULE_4__["default"])('siteOwner')(portfolioNew));
 
 /***/ }),
 
@@ -2435,14 +2970,14 @@ const auth0Client = new Auth0();
 
 /***/ }),
 
-/***/ 3:
-/*!*******************************!*\
-  !*** multi ./pages/index.jsx ***!
-  \*******************************/
+/***/ 5:
+/*!*************************************!*\
+  !*** multi ./pages/portfolioNew.js ***!
+  \*************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\Documents\Projects\heroku potfolio test\heroku-test\pages\index.jsx */"./pages/index.jsx");
+module.exports = __webpack_require__(/*! E:\Documents\Projects\heroku potfolio test\heroku-test\pages\portfolioNew.js */"./pages/portfolioNew.js");
 
 
 /***/ }),
@@ -2524,6 +3059,17 @@ module.exports = require("core-js/library/fn/weak-map");
 
 /***/ }),
 
+/***/ "formik":
+/*!*************************!*\
+  !*** external "formik" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("formik");
+
+/***/ }),
+
 /***/ "js-cookie":
 /*!****************************!*\
   !*** external "js-cookie" ***!
@@ -2543,6 +3089,17 @@ module.exports = require("js-cookie");
 /***/ (function(module, exports) {
 
 module.exports = require("jsonwebtoken");
+
+/***/ }),
+
+/***/ "moment":
+/*!*************************!*\
+  !*** external "moment" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("moment");
 
 /***/ }),
 
@@ -2612,6 +3169,17 @@ module.exports = require("react");
 
 /***/ }),
 
+/***/ "react-datepicker":
+/*!***********************************!*\
+  !*** external "react-datepicker" ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("react-datepicker");
+
+/***/ }),
+
 /***/ "react-is":
 /*!***************************!*\
   !*** external "react-is" ***!
@@ -2620,17 +3188,6 @@ module.exports = require("react");
 /***/ (function(module, exports) {
 
 module.exports = require("react-is");
-
-/***/ }),
-
-/***/ "react-typed":
-/*!******************************!*\
-  !*** external "react-typed" ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("react-typed");
 
 /***/ }),
 
@@ -2657,4 +3214,4 @@ module.exports = require("url");
 /***/ })
 
 /******/ });
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=portfolioNew.js.map
