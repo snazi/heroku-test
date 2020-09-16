@@ -6,6 +6,7 @@ const BaseLayout = (props) => {
 
     const { className, children, isAuthenticated, user, isSiteOwner, title, cannonical } = props
     const headerType = props.headerType || 'default'
+    const title = props.title || 'Angelo Amadora Portfolio'
 
 
     return (
