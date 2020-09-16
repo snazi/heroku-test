@@ -29,7 +29,7 @@ exports.checkJWT = jwt({
   exports.checkRole = (role) => (req, res, next) => {
       const user = req.user
 
-      console.log(NAMESPACE)
+      console.log("this is name" +  NAMESPACE)
 
       if( user && user[NAMESPACE +'/role'] && (user[NAMESPACE +'/role'] === role) ){
         next()
