@@ -1,0 +1,1 @@
+{"ast":null,"code":"import FontFaceObserver from 'fontfaceobserver';\n\nconst Fonts = () => {\n  const montserrat = new FontFaceObserver('Montserrat');\n  montserrat.load().then(() => {\n    document.documentElement.classList.add('montserrat-loaded');\n  });\n};\n\nexport default Fonts;","map":null,"metadata":{},"sourceType":"module"}
