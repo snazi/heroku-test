@@ -1,0 +1,18 @@
+.base-page {
+    padding-top: 150px;
+    padding-bottom:  100px;
+    color: black;
+    background-color: #ecedee;
+    min-height: 100vh;
+    max-width: 100vw;
+    
+  
+    .page-header {
+      .page-header-title {
+        font-weight: 700;
+        color: black;
+        display: inline-block;
+        margin-bottom: 20px;
+      }
+    }
+  }

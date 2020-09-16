@@ -1,0 +1,1 @@
+{"ast":null,"code":"// taken from next-routes readme\nconst routes = require('next-routes'); // Name   Page      Pattern\n\n\nmodule.exports = routes() // ----   ----      -----\n.add('portfolio', '/portfolio/:id'); // portfolio   portfolio.js      /blog/:slug","map":null,"metadata":{},"sourceType":"script"}
