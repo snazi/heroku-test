@@ -1,6 +1,6 @@
 module.exports = {                                               
     DB_URI: process.env.DB_URI,
-    NAMESPACE: 'http://angeloamadora.herokuapp.com'
+    NAMESPACE: 'http://amadora.tech'
 }
 
 
