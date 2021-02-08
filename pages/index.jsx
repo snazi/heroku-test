@@ -86,7 +86,7 @@ export class Index extends Component {
                         <div className="hero-welcome-text">
                             <h1>
                             { isAuthenticated && <span> <b>{user.name}</b> </span> }
-                            Welcome to the portfolio website of Angelo Amadora.
+                            Welcome to the portfolio website of Angelo Amadora MUCH LOVE.
                             Get informed, collaborate and discover projects I was working on through the years!
                             </h1>
                         </div>
