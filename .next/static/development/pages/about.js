@@ -58909,7 +58909,7 @@ var auth0Client = new Auth0();
 
 /***/ }),
 
-/***/ 13:
+/***/ 10:
 /*!*****************************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fabout&absolutePagePath=E%3A%5CDocuments%5CCode%20Projects%5CPortfolio%5Cheroku-test%5Cpages%5Cabout.js ***!
   \*****************************************************************************************************************************************************/
@@ -58965,5 +58965,5 @@ module.exports = dll_2adc2403d89adc16ead0;
 
 /***/ })
 
-},[[13,"static/runtime/webpack.js","styles"]]]);
+},[[10,"static/runtime/webpack.js","styles"]]]);
 //# sourceMappingURL=about.js.map
