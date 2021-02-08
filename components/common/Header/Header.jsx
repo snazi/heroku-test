@@ -93,9 +93,9 @@ const Header = (props) => {
   
   return (
     <div>
-      <Navbar className={`port-navbar port-nav-base absolute ${className} ${menuOpenClass}`} color="transparent" expand="md">
+      <Navbar className={`port-navbar port-nav-base absolute ${className} ${menuOpenClass}`} dark expand="md">
         <NavbarBrand className="port-navbar-brand" href="/">Angelo Amadora</NavbarBrand>
-        <NavbarToggler onClick={toggle} />
+        <NavbarToggler onClick={toggle} className={`colorpls`}/>
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem className="port-navbar-item">

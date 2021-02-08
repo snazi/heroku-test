@@ -443,13 +443,14 @@ const Header = props => {
   const menuOpenClass = isOpen ? 'menu-open' : 'menu-close';
   return __jsx("div", null, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_2__["Navbar"], {
     className: `port-navbar port-nav-base absolute ${className} ${menuOpenClass}`,
-    color: "transparent",
+    dark: true,
     expand: "md"
   }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_2__["NavbarBrand"], {
     className: "port-navbar-brand",
     href: "/"
   }, "Angelo Amadora"), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_2__["NavbarToggler"], {
-    onClick: toggle
+    onClick: toggle,
+    className: `colorpls`
   }), __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_2__["Collapse"], {
     isOpen: isOpen,
     navbar: true

@@ -46,7 +46,6 @@ export class Index extends Component {
             <BaseLayout className={`cover ${isFlipping ? 'cover-1' : 'cover-0'}`} {...this.props.auth} headerType="index"
                         title="Angelo Amadora - Portfolio">
                 <div className="main-section">
-
                     
                 </div>
             </BaseLayout>
