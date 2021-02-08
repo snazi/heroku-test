@@ -527,7 +527,7 @@ class MyApp extends next_app__WEBPACK_IMPORTED_MODULE_1___default.a {
       isAuthenticated = true;
     }
 
-    const isSiteOwner = user && user["http://angeloamadora.herokuapp.com/role"] === 'siteOwner'; // now that we've managed to give auth details to both client and server side, we should pass the auth data to our pages
+    const isSiteOwner = user && user["http://amadora.tech/role"] === 'siteOwner'; // now that we've managed to give auth details to both client and server side, we should pass the auth data to our pages
 
     const auth = {
       user,
@@ -634,7 +634,7 @@ class Auth0 {
     js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('jwt');
     js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('expiresAt');
     this.auth0.logout({
-      returnTo: '',
+      returnTo: "http://localhost:3000",
       clientID: CLIENT_ID
     });
   }

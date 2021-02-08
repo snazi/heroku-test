@@ -528,10 +528,10 @@ const BaseLayout = props => {
     isAuthenticated,
     user,
     isSiteOwner,
-    title,
     cannonical
   } = props;
   const headerType = props.headerType || 'default';
+  const title = props.title || 'Angelo Amadora Portfolio';
   return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx(next_head__WEBPACK_IMPORTED_MODULE_2___default.a, null, __jsx("title", null, title), __jsx("meta", {
     name: "description",
     content: "My Name is Angelo Amadora and I am a software developer. Nice to meet you! Feel free to browse through my website."
@@ -2640,7 +2640,7 @@ class Auth0 {
     js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('jwt');
     js_cookie__WEBPACK_IMPORTED_MODULE_1___default.a.remove('expiresAt');
     this.auth0.logout({
-      returnTo: '',
+      returnTo: "http://localhost:3000",
       clientID: CLIENT_ID
     });
   }
@@ -2717,7 +2717,7 @@ const auth0Client = new Auth0();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! E:\Documents\Projects\heroku potfolio test\heroku-test\pages\portfolios.js */"./pages/portfolios.js");
+module.exports = __webpack_require__(/*! E:\Documents\Code Projects\Portfolio\heroku-test\pages\portfolios.js */"./pages/portfolios.js");
 
 
 /***/ }),

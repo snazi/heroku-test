@@ -4797,7 +4797,7 @@ function connect(options) {
       error.name = err.name;
       error.stack = err.stack; // __NEXT_DIST_DIR is provided by webpack
 
-      (0, _sourceMapSupport.rewriteStacktrace)(error, "E:\\Documents\\Projects\\heroku potfolio test\\heroku-test\\.next");
+      (0, _sourceMapSupport.rewriteStacktrace)(error, "E:\\Documents\\Code Projects\\Portfolio\\heroku-test\\.next");
       return error;
     }
   };
